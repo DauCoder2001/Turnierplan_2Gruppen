@@ -24,12 +24,19 @@
         .settings-box { background-color: #e8f8f5; padding: 10px 20px; border-radius: 6px; border: 1px solid #a3e4d7; display: flex; align-items: center; gap: 12px; font-weight: bold; color: #117a65; flex-wrap: wrap; }
         select { padding: 6px 12px; border-radius: 4px; border: 1px solid #117a65; font-size: 1rem; font-weight: bold; background-color: #fff; cursor: pointer; }
 
-        .grid-layout { display: table; width: 100%; margin-top: 10px; }
-        .grid-row { display: table-row; }
-        .grid-col-left { display: table-cell; width: 360px; vertical-align: top; padding-right: 25px; }
-        .grid-col-right { display: table-cell; vertical-align: top; }
+        .grid-layout { display: flex; gap: 25px; align-items: flex-start; width: 100%; margin-top: 10px; }
+        /* row-Ebene aus dem Layout nehmen, damit die Spalten direkte Flex-Kinder werden */
+        .grid-row { display: contents; }
+        /* Jede Spalte bekommt eine eigene Maximalhoehe und einen eigenen Scrollbereich (an Fensterhoehe gekoppelt) */
+        .grid-col-left { flex: 0 0 360px; max-height: calc(100vh - 200px); overflow-y: auto; padding-right: 10px; }
+        .grid-col-right { flex: 1; min-width: 0; max-height: calc(100vh - 200px); overflow-y: auto; }
         .card { background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 20px; margin-bottom: 20px; }
         h2 { color: #2c3e50; font-size: 1.15rem; margin-top: 0; margin-bottom: 15px; border-left: 4px solid #16a085; padding-left: 8px; }
+        /* Kopfzeile mit Auf-/Zuklapp-Button fuer die Spielereingabe */
+        .player-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .player-header h2 { margin-bottom: 0; }
+        .toggle-players-btn { background-color: #16a085; color: #fff; border: none; padding: 7px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.85rem; white-space: nowrap; }
+        .toggle-players-btn:hover { background-color: #117a65; }
         h3 { color: #2c3e50; font-size: 1rem; margin: 18px 0 8px 0; }
 
         .player-input-row { display: table; width: 100%; margin-bottom: 6px; }
@@ -213,6 +220,33 @@
             #print-report > *:last-child { margin-bottom: 0 !important; }
             .no-print { display: none !important; }
         }
+
+        /* --- Fragezeichen-Tooltip (Hilfe zu Ueberschriften) --- */
+        /* Kopfzeile: Ueberschrift und Fragezeichen nebeneinander */
+        .h2-with-help { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; }
+        .h2-with-help h2 { margin-bottom: 0; }
+        /* Fragezeichen-Icon */
+        .help-icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 18px; height: 18px; border-radius: 50%;
+            border: 1.5px solid #16a085; color: #16a085;
+            font-size: 12px; font-weight: bold; line-height: 1;
+            cursor: help; user-select: none; flex: 0 0 auto; background: #fff;
+        }
+        .help-icon:hover, .help-icon:focus { background: #16a085; color: #fff; outline: none; }
+        /* Tooltip-Text: versteckt, wird per JS als fixed positioniert und ist damit
+           unabhaengig vom Scrollbereich der Spalte (wird nicht abgeschnitten) */
+        .help-body {
+            display: none; position: fixed; z-index: 9999;
+            max-width: 300px; background: #2c3e50; color: #fff;
+            font-size: 0.82rem; font-weight: normal; line-height: 1.45;
+            padding: 10px 12px; border-radius: 6px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+        }
+        .help-body b { color: #7fd8c4; }
+        /* Fragezeichen im Ausdruck ausblenden */
+        @media print { .help-icon { display: none !important; } }
+
     </style>
 </head>
 <body>
@@ -263,19 +297,22 @@
             <div class="grid-col-left">
 
                 <div class="card">
-                    <h2>1. Spieler benennen</h2>
+                    <div class="player-header">
+                        <div class="h2-with-help">
+                            <h2>1. Spieler benennen</h2>
+                            <span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">Gruppe über das Auswahlfeld ändern. Der Wechsel erfolgt immer als Tausch mit einem Spieler der anderen Gruppe, die Gruppenstärken bleiben dadurch gleich. Nach dem ersten eingetragenen Ergebnis ist die Zuordnung gesperrt.</span></span>
+                        </div>
+                        <button type="button" id="btn-toggle-players" class="toggle-players-btn no-print" aria-expanded="true">Schließen</button>
+                    </div>
                     <div id="player-inputs-container"></div>
                     <div id="swap-panel" class="swap-panel" style="display:none;"></div>
                     <div id="group-edit-note" class="group-edit-note"></div>
                 </div>
 
                 <div class="card">
-                    <h2>2. Gruppen auslosen</h2>
-                    <div class="info-note">
-                        Die Teilnehmer werden zufällig auf Gruppe A und Gruppe B verteilt.
-                        Bei ungerader Teilnehmerzahl hat Gruppe A einen Spieler mehr.
-                        Die Zuordnung lässt sich anschließend oben über das Auswahlfeld hinter dem Spielernamen
-                        von Hand tauschen, solange noch kein Ergebnis eingetragen ist.
+                    <div class="h2-with-help">
+                        <h2>2. Gruppen auslosen</h2>
+                        <span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">Die Teilnehmer werden zufällig auf Gruppe A und Gruppe B verteilt. Bei ungerader Teilnehmerzahl hat Gruppe A einen Spieler mehr. Die Zuordnung lässt sich anschließend oben über das Auswahlfeld hinter dem Spielernamen von Hand tauschen, solange noch kein Ergebnis eingetragen ist.</span></span>
                     </div>
                     <div style="display:flex; gap:8px; margin-bottom:10px;">
                         <button id="btn-draw" class="btn btn-primary">Gruppen auslosen</button>
@@ -311,13 +348,9 @@
             <div class="grid-col-right">
 
                 <div class="card">
-                    <h2>3. Phase 1 - Gruppenphase <span id="game-type-display" style="font-weight:normal; color:#7f8c8d; font-size:0.9rem;">(8-Ball)</span></h2>
-                    <div class="info-note">
-                        In jeder Gruppe spielt jeder gegen jeden.
-                        Reihenfolge bei Gleichheit: 1. Punkte (Siege) - 2. Satz-Differenz - 3. Direkter Vergleich (H2H) - 4. Stichkampf (SK, manuell durch Turnierleitung).<br>
-                        Ein Spiel gilt erst als beendet, wenn ein Spieler die eingestellte Race-to-Vorgabe an Sätzen erreicht hat.
-                        Der Stichkampf (Reihenfolge durch die Turnierleitung festlegen) wird erst angeboten, wenn alle Spiele der jeweiligen Gruppe beendet sind.<br>
-                        Tipp: Links Spieler ankreuzen, um deren Spiele im Plan rot hervorzuheben.
+                    <div class="h2-with-help">
+                        <h2>3. Phase 1 - Gruppenphase <span id="game-type-display" style="font-weight:normal; color:#7f8c8d; font-size:0.9rem;">(8-Ball)</span></h2>
+                        <span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">In jeder Gruppe spielt jeder gegen jeden. Reihenfolge bei Gleichheit: 1. Punkte (Siege) - 2. Satz-Differenz - 3. Direkter Vergleich (H2H) - 4. Stichkampf (SK, manuell durch Turnierleitung).<br>Ein Spiel gilt erst als beendet, wenn ein Spieler die eingestellte Race-to-Vorgabe an Sätzen erreicht hat. Der Stichkampf (Reihenfolge durch die Turnierleitung festlegen) wird erst angeboten, wenn alle Spiele der jeweiligen Gruppe beendet sind.<br>Tipp: Links Spieler ankreuzen, um deren Spiele im Plan rot hervorzuheben.</span></span>
                     </div>
                     <div class="group-grid">
                         <div class="group-col">
@@ -354,10 +387,9 @@
                 </div>
 
                 <div class="card">
-                    <h2>4. Phase 2 - Platzierungsduelle A gegen B</h2>
-                    <div class="info-note">
-                        Jeder Spieler trifft auf seinen Tabellen-Gegenpart der anderen Gruppe: A1 gegen B1, A2 gegen B2, A3 gegen B3 usw.
-                        Mit dem Start werden die Gruppen-Platzierungen fixiert; spätere Korrekturen in Phase 1 ändern die Paarungen nicht mehr.
+                    <div class="h2-with-help">
+                        <h2>4. Phase 2 - Platzierungsduelle A gegen B</h2>
+                        <span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">Jeder Spieler trifft auf seinen Tabellen-Gegenpart der anderen Gruppe: A1 gegen B1, A2 gegen B2, A3 gegen B3 usw. Mit dem Start werden die Gruppen-Platzierungen fixiert; spätere Korrekturen in Phase 1 ändern die Paarungen nicht mehr.</span></span>
                     </div>
                     <div id="phase2-status" class="hint-box info"></div>
                     <div style="display:flex; gap:8px; margin-bottom:12px;">
@@ -2086,6 +2118,56 @@
 
         document.getElementById('print-report').innerHTML = html;
     }
+        // Spielereingabe auf-/zuklappen (Standard: aufgeklappt)
+        (function() {
+            const btn = document.getElementById('btn-toggle-players');
+            const box = document.getElementById('player-inputs-container');
+            if (btn && box) {
+                btn.addEventListener('click', () => {
+                    const offen = box.style.display !== 'none';
+                    box.style.display = offen ? 'none' : '';
+                    btn.textContent = offen ? 'Öffnen' : 'Schließen';
+                    btn.setAttribute('aria-expanded', offen ? 'false' : 'true');
+                });
+            }
+        })();
+
+    /* ---------- Fragezeichen-Tooltips ---------- */
+    /* Zeigt den versteckten Hilfetext (.help-body) beim Ueberfahren oder Fokussieren
+       des Fragezeichens als fixed positioniertes Feld an - dadurch unabhaengig vom
+       Scrollbereich der Spalte (wird nicht abgeschnitten). */
+    (function () {
+        function positionHelp(iconEl, body) {
+            body.style.display = 'block';
+            var r = iconEl.getBoundingClientRect();
+            var bw = body.offsetWidth;
+            var bh = body.offsetHeight;
+            var top = r.bottom + 8;          // standardmaessig unter dem Icon
+            var left = r.left;
+            if (left + bw > window.innerWidth - 10) { left = window.innerWidth - bw - 10; }
+            if (left < 10) { left = 10; }
+            if (top + bh > window.innerHeight - 10) { top = r.top - bh - 8; }  // sonst nach oben klappen
+            body.style.top = top + 'px';
+            body.style.left = left + 'px';
+        }
+        function hideHelp(body) { body.style.display = 'none'; }
+        function initHelpTooltips() {
+            document.querySelectorAll('.help-icon').forEach(function (iconEl) {
+                var body = iconEl.querySelector('.help-body');
+                if (!body) { return; }
+                iconEl.addEventListener('mouseenter', function () { positionHelp(iconEl, body); });
+                iconEl.addEventListener('mouseleave', function () { hideHelp(body); });
+                iconEl.addEventListener('focus',      function () { positionHelp(iconEl, body); });
+                iconEl.addEventListener('blur',       function () { hideHelp(body); });
+            });
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initHelpTooltips);
+        } else {
+            initHelpTooltips();
+        }
+    })();
+
 </script>
 </body>
 </html>
