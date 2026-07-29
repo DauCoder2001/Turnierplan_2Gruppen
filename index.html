@@ -222,16 +222,14 @@
         }
 
         /* --- Fragezeichen-Tooltip (Hilfe zu Ueberschriften) --- */
-        /* Kopfzeile: Ueberschrift und Fragezeichen nebeneinander */
-        .h2-with-help { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; }
-        .h2-with-help h2 { margin-bottom: 0; }
-        /* Fragezeichen-Icon */
+        /* Fragezeichen-Icon steht inline direkt hinter dem Ueberschrifttext */
         .help-icon {
             display: inline-flex; align-items: center; justify-content: center;
             width: 18px; height: 18px; border-radius: 50%;
             border: 1.5px solid #16a085; color: #16a085;
             font-size: 12px; font-weight: bold; line-height: 1;
-            cursor: help; user-select: none; flex: 0 0 auto; background: #fff;
+            cursor: help; user-select: none; background: #fff;
+            vertical-align: middle; margin-left: 6px;
         }
         .help-icon:hover, .help-icon:focus { background: #16a085; color: #fff; outline: none; }
         /* Tooltip-Text: versteckt, wird per JS als fixed positioniert und ist damit
@@ -298,10 +296,7 @@
 
                 <div class="card">
                     <div class="player-header">
-                        <div class="h2-with-help">
-                            <h2>1. Spieler benennen</h2>
-                            <span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">Gruppe über das Auswahlfeld ändern. Der Wechsel erfolgt immer als Tausch mit einem Spieler der anderen Gruppe, die Gruppenstärken bleiben dadurch gleich. Nach dem ersten eingetragenen Ergebnis ist die Zuordnung gesperrt.</span></span>
-                        </div>
+                        <h2>1. Spieler benennen <span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">Gruppe über das Auswahlfeld ändern. Der Wechsel erfolgt immer als Tausch mit einem Spieler der anderen Gruppe, die Gruppenstärken bleiben dadurch gleich. Nach dem ersten eingetragenen Ergebnis ist die Zuordnung gesperrt.</span></span></h2>
                         <button type="button" id="btn-toggle-players" class="toggle-players-btn no-print" aria-expanded="true">Schließen</button>
                     </div>
                     <div id="player-inputs-container"></div>
@@ -310,10 +305,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="h2-with-help">
-                        <h2>2. Gruppen auslosen</h2>
-                        <span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">Die Teilnehmer werden zufällig auf Gruppe A und Gruppe B verteilt. Bei ungerader Teilnehmerzahl hat Gruppe A einen Spieler mehr. Die Zuordnung lässt sich anschließend oben über das Auswahlfeld hinter dem Spielernamen von Hand tauschen, solange noch kein Ergebnis eingetragen ist.</span></span>
-                    </div>
+                    <h2>2. Gruppen auslosen <span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">Die Teilnehmer werden zufällig auf Gruppe A und Gruppe B verteilt. Bei ungerader Teilnehmerzahl hat Gruppe A einen Spieler mehr. Die Zuordnung lässt sich anschließend oben über das Auswahlfeld hinter dem Spielernamen von Hand tauschen, solange noch kein Ergebnis eingetragen ist.</span></span></h2>
                     <div style="display:flex; gap:8px; margin-bottom:10px;">
                         <button id="btn-draw" class="btn btn-primary">Gruppen auslosen</button>
                         <button id="btn-clear-scores" class="btn btn-secondary" title="Alle Ergebnisse auf 0 zurücksetzen, Gruppen bleiben">Ergebnisse zurücksetzen</button>
@@ -348,10 +340,7 @@
             <div class="grid-col-right">
 
                 <div class="card">
-                    <div class="h2-with-help">
-                        <h2>3. Phase 1 - Gruppenphase <span id="game-type-display" style="font-weight:normal; color:#7f8c8d; font-size:0.9rem;">(8-Ball)</span></h2>
-                        <span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">In jeder Gruppe spielt jeder gegen jeden. Reihenfolge bei Gleichheit: 1. Punkte (Siege) - 2. Satz-Differenz - 3. Direkter Vergleich (H2H) - 4. Stichkampf (SK, manuell durch Turnierleitung).<br>Ein Spiel gilt erst als beendet, wenn ein Spieler die eingestellte Race-to-Vorgabe an Sätzen erreicht hat. Der Stichkampf (Reihenfolge durch die Turnierleitung festlegen) wird erst angeboten, wenn alle Spiele der jeweiligen Gruppe beendet sind.<br>Tipp: Links Spieler ankreuzen, um deren Spiele im Plan rot hervorzuheben.</span></span>
-                    </div>
+                    <h2>3. Phase 1 - Gruppenphase <span id="game-type-display" style="font-weight:normal; color:#7f8c8d; font-size:0.9rem;">(8-Ball)</span> <span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">In jeder Gruppe spielt jeder gegen jeden. Reihenfolge bei Gleichheit: 1. Punkte (Siege) - 2. Satz-Differenz - 3. Direkter Vergleich (H2H) - 4. Stichkampf (SK, manuell durch Turnierleitung).<br>Ein Spiel gilt erst als beendet, wenn ein Spieler die eingestellte Race-to-Vorgabe an Sätzen erreicht hat. Der Stichkampf (Reihenfolge durch die Turnierleitung festlegen) wird erst angeboten, wenn alle Spiele der jeweiligen Gruppe beendet sind.<br>Tipp: Links Spieler ankreuzen, um deren Spiele im Plan rot hervorzuheben.</span></span></h2>
                     <div class="group-grid">
                         <div class="group-col">
                             <div class="group-title a">
@@ -387,10 +376,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="h2-with-help">
-                        <h2>4. Phase 2 - Platzierungsduelle A gegen B</h2>
-                        <span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">Jeder Spieler trifft auf seinen Tabellen-Gegenpart der anderen Gruppe: A1 gegen B1, A2 gegen B2, A3 gegen B3 usw. Mit dem Start werden die Gruppen-Platzierungen fixiert; spätere Korrekturen in Phase 1 ändern die Paarungen nicht mehr.</span></span>
-                    </div>
+                    <h2>4. Phase 2 - Platzierungsduelle A gegen B <span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">Jeder Spieler trifft auf seinen Tabellen-Gegenpart der anderen Gruppe: A1 gegen B1, A2 gegen B2, A3 gegen B3 usw. Mit dem Start werden die Gruppen-Platzierungen fixiert; spätere Korrekturen in Phase 1 ändern die Paarungen nicht mehr.</span></span></h2>
                     <div id="phase2-status" class="hint-box info"></div>
                     <div style="display:flex; gap:8px; margin-bottom:12px;">
                         <button id="btn-start-phase2" class="btn btn-primary">Phase 2 starten</button>
