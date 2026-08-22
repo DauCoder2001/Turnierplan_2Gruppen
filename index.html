@@ -32,7 +32,11 @@
         .btn-add-player:hover { background-color: #0e6252; }
 
         .settings-box { background-color: #e8f8f5; padding: 10px 20px; border-radius: 6px; border: 1px solid #a3e4d7; display: flex; align-items: center; gap: 12px; font-weight: bold; color: #117a65; flex-wrap: wrap; }
+        /* Senkrechter Trenner: links die Turniereinstellungen, rechts die Race-to-Vorgaben je Phase */
+        .settings-box .sep { width: 1px; align-self: stretch; background-color: #a3e4d7; margin: 0 4px; }
         select { padding: 6px 12px; border-radius: 4px; border: 1px solid #117a65; font-size: 1rem; font-weight: bold; background-color: #fff; cursor: pointer; }
+        /* Schmalere Auswahlfelder fuer die beiden Race-to-Vorgaben */
+        select.small { padding: 4px 8px; font-size: 0.9rem; }
 
         .grid-layout { display: flex; gap: 0; align-items: flex-start; width: 100%; margin-top: 10px; }
         /* row-Ebene aus dem Layout nehmen, damit die Spalten direkte Flex-Kinder werden */
@@ -325,8 +329,22 @@
                 <option value="10-Ball">10-Ball</option>
                 <option value="Multi-Ball">Multi-Ball</option>
             </select>
-            <label for="race-to">Race to:</label>
-            <select id="race-to">
+            <div class="sep"></div>
+            <label for="race-to" title="Race to in Phase 1 (Gruppenphase)">Race to:</label>
+            <select id="race-to" class="small">
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+            </select>
+            <label for="race-phase2" title="Race to in Phase 2 (Platzierungsduelle)">Phase 2:</label>
+            <select id="race-phase2" class="small">
                 <option value="2">2</option>
                 <option value="3" selected>3</option>
                 <option value="4">4</option>
@@ -383,7 +401,7 @@
                     <div id="save-load-status" class="save-load-status"></div>
                     <div id="autosave-status" class="autosave-status"></div>
 
-                    <h2 class="restore-heading">Restore-Punkte <span class="help-glue">(letzte 5)<span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body"><b>Automatische Sicherung vor riskanten Aktionen.</b><br>Vor jedem Zurücksetzen, vor dem Ändern der Teilnehmerzahl oder Race-to-Vorgabe, vor jedem Neu-Auslosen, Ergebnisse-Löschen, Phase-2-Zurücksetzen sowie vor jedem Laden und Importieren wird der aktuelle Stand gesichert. Die letzten fünf Sicherungen stehen hier zum Wiederherstellen bereit und bleiben auch nach dem Schließen der Datei erhalten.</span></span></span></h2>
+                    <h2 class="restore-heading">Restore-Punkte <span class="help-glue">(letzte 5)<span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body"><b>Automatische Sicherung vor riskanten Aktionen.</b><br>Vor jedem Zurücksetzen, vor dem Ändern der Teilnehmerzahl oder einer Race-to-Vorgabe, vor jedem Neu-Auslosen, Ergebnisse-Löschen, Phase-2-Zurücksetzen sowie vor jedem Laden und Importieren wird der aktuelle Stand gesichert. Die letzten fünf Sicherungen stehen hier zum Wiederherstellen bereit und bleiben auch nach dem Schließen der Datei erhalten.</span></span></span></h2>
                     <div id="restore-list"></div>
                     <div class="save-load-row" style="margin-top:8px;">
                         <button type="button" id="btn-restore-clear" class="save-load-btn secondary" title="Alle Restore-Punkte löschen">Kette leeren</button>
@@ -396,7 +414,7 @@
             <div class="grid-col-right">
 
                 <div class="card">
-                    <h2>3. Phase 1 - Gruppenphase <span class="help-glue"><span id="game-type-display" style="font-weight:normal; color:#7f8c8d; font-size:0.9rem;">(8-Ball)</span><span id="phase1-lock-badge" class="lock-badge" style="display:none;">gesperrt</span><span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">In jeder Gruppe spielt jeder gegen jeden. Reihenfolge bei Gleichheit: 1. Punkte (Siege) - 2. Satz-Differenz - 3. Direkter Vergleich (H2H) - 4. Stichkampf (SK, manuell durch Turnierleitung).<br>Ein Spiel gilt erst als beendet, wenn ein Spieler die eingestellte Race-to-Vorgabe an Sätzen erreicht hat. Der Stichkampf (Reihenfolge durch die Turnierleitung festlegen) wird erst angeboten, wenn alle Spiele der jeweiligen Gruppe beendet sind.<br>Tipp: Links Spieler ankreuzen, um deren Spiele im Plan rot hervorzuheben.</span></span></span></h2>
+                    <h2>3. Phase 1 - Gruppenphase <span class="help-glue"><span id="game-type-display" style="font-weight:normal; color:#7f8c8d; font-size:0.9rem;">(8-Ball)</span><span id="phase1-lock-badge" class="lock-badge" style="display:none;">gesperrt</span><span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">In jeder Gruppe spielt jeder gegen jeden. Reihenfolge bei Gleichheit: 1. Punkte (Siege) - 2. Satz-Differenz - 3. Direkter Vergleich (H2H) - 4. Stichkampf (SK, manuell durch Turnierleitung).<br>Ein Spiel gilt erst als beendet, wenn ein Spieler die Race-to-Vorgabe der Gruppenphase an Sätzen erreicht hat (Auswahlfeld "Race to" oben). Der Stichkampf (Reihenfolge durch die Turnierleitung festlegen) wird erst angeboten, wenn alle Spiele der jeweiligen Gruppe beendet sind.<br>Tipp: Links Spieler ankreuzen, um deren Spiele im Plan rot hervorzuheben.</span></span></span></h2>
                     <div class="group-grid">
                         <div class="group-col">
                             <div class="group-title a">
@@ -432,7 +450,7 @@
                 </div>
 
                 <div class="card">
-                    <h2>4. Phase 2 - Platzierungsduelle A gegen <span class="help-glue">B<span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">Jeder Spieler trifft auf seinen Tabellen-Gegenpart der anderen Gruppe: A1 gegen B1, A2 gegen B2, A3 gegen B3 usw. Mit dem Start werden die Gruppen-Platzierungen fixiert; spätere Korrekturen in Phase 1 ändern die Paarungen nicht mehr.</span></span></span></h2>
+                    <h2>4. Phase 2 - Platzierungsduelle A gegen <span class="help-glue">B<span class="help-icon" tabindex="0" role="button" aria-label="Erklärung anzeigen">?<span class="help-body">Jeder Spieler trifft auf seinen Tabellen-Gegenpart der anderen Gruppe: A1 gegen B1, A2 gegen B2, A3 gegen B3 usw. Mit dem Start werden die Gruppen-Platzierungen fixiert; spätere Korrekturen in Phase 1 ändern die Paarungen nicht mehr.<br>Für die Duelle gilt die eigene Race-to-Vorgabe aus dem Auswahlfeld "Phase 2" oben, unabhängig von der Vorgabe der Gruppenphase.</span></span></span></h2>
                     <div id="phase2-status" class="hint-box info"></div>
                     <div style="display:flex; gap:8px; margin-bottom:12px;">
                         <button id="btn-start-phase2" class="btn btn-primary">Phase 2 starten</button>
@@ -513,7 +531,9 @@
     // Gruppenspiele gelb hervor. Schliesst sich mit den Spieler-Haken gegenseitig aus
     // und wird wie diese nicht mitgespeichert.
     let markOpen = false;
-    let raceTo = 3;
+    // Race-to-Vorgaben: Phase 1 und Phase 2 werden getrennt eingestellt.
+    let raceGroup = 3;                      // Race to in Phase 1 (Gruppenphase)
+    let racePhase2 = 3;                     // Race to in Phase 2 (Platzierungsduelle)
     let phase2 = null;                      // null oder { A: [idx...], B: [idx...] } = fixierte Gruppenplatzierungen
     let tournamentStart = null;             // Zeitpunkt des ersten eingetragenen Ergebnisses als ISO-String, sonst null
     // Offener Tauschdialog: { idxOut, from, to } oder null
@@ -543,22 +563,10 @@
             document.getElementById('game-type-display').innerText = `(${e.target.value})`;
             scheduleAutosave();
         });
-        document.getElementById('race-to').addEventListener('change', (e) => {
-            const neu = parseInt(e.target.value);
-            // Warnung: Die neue Vorgabe kappt Werte und kann beendete Spiele wieder oeffnen
-            if (hasAnyScore() && !confirm(
-                `"Race to" von ${raceTo} auf ${neu} ändern?\n\n` +
-                `Bereits eingetragene Ergebnisse werden angepasst: Werte über ${neu} werden gekappt, ` +
-                `beendete Spiele können dadurch wieder als "nicht beendet" gelten.`)) {
-                e.target.value = raceTo;
-                return;
-            }
-            const hatteErgebnisse = hasAnyScore();
-            if (hatteErgebnisse) restorePunktAnlegen('Vor: Race-to ändern');
-            raceTo = neu;
-            applyRaceToLimit();
-            if (hatteErgebnisse) zeigeRestoreBanner('Race-to geändert.');
-        });
+
+        // Race-to-Vorgaben: je Phase ein eigenes Auswahlfeld
+        bindRaceSelect('race-to',     'Gruppenphase',        () => raceGroup,  (v) => { raceGroup = v; });
+        bindRaceSelect('race-phase2', 'Platzierungsduelle',  () => racePhase2, (v) => { racePhase2 = v; });
 
         document.getElementById('btn-draw').addEventListener('click', drawGroups);
         document.getElementById('btn-clear-scores').addEventListener('click', clearAllScores);
@@ -604,6 +612,29 @@
             initTournament(playerCount);
         }
     });
+
+    // Ein Race-to-Auswahlfeld mit seiner Variablen verknuepfen. Die neue Vorgabe
+    // kappt bereits eingetragene Werte und kann beendete Spiele wieder oeffnen,
+    // deshalb die Rueckfrage, sobald Ergebnisse vorliegen.
+    // bereich = Klartext fuer die Rueckfrage ("Gruppenphase" oder "Platzierungsduelle").
+    function bindRaceSelect(id, bereich, getter, setter) {
+        document.getElementById(id).addEventListener('change', (e) => {
+            const neu = parseInt(e.target.value);
+            const alt = getter();
+            if (hasAnyScore() && !confirm(
+                `"Race to" für ${bereich} von ${alt} auf ${neu} ändern?\n\n` +
+                `Bereits eingetragene Ergebnisse werden angepasst: Werte über ${neu} werden gekappt, ` +
+                `beendete Spiele können dadurch wieder als "nicht beendet" gelten.`)) {
+                e.target.value = alt;
+                return;
+            }
+            const hatteErgebnisse = hasAnyScore();
+            if (hatteErgebnisse) restorePunktAnlegen('Vor: Race-to ändern (' + bereich + ')');
+            setter(neu);
+            applyRaceToLimit();
+            if (hatteErgebnisse) zeigeRestoreBanner('Race-to geändert.');
+        });
+    }
 
     // ---------------------------------------------------------------------
     // Automatische Sicherung (Schutz gegen versehentliches Schliessen)
@@ -773,7 +804,7 @@
             const zeit = eintrag.savedAt ? formatTimeDE(new Date(eintrag.savedAt)) + ' Uhr' : '';
             return '<div class="restore-item">' +
                    '<div class="ri-label">' + restoreEscape(eintrag.label) + '</div>' +
-                   '<div class="ri-meta">' + zeit + ' \u00b7 ' + restoreEscape(eintrag.summary || '') + '</div>' +
+                   '<div class="ri-meta">' + zeit + ' · ' + restoreEscape(eintrag.summary || '') + '</div>' +
                    '<button type="button" class="save-load-btn" data-restore-index="' + index + '">Wiederherstellen</button>' +
                    '</div>';
         }).join('');
@@ -873,16 +904,17 @@
 
     // Ein Spiel ist erst beendet, wenn ein Spieler die Race-to-Vorgabe erreicht hat.
     // 3:0 bei "Race to 5" ist ein Zwischenstand, kein Endergebnis.
-    function isGameFinished(s1, s2) {
+    // race = Vorgabe der jeweiligen Phase (raceGroup oder racePhase2).
+    function isGameFinished(s1, s2, race) {
         if (s1 === null || s1 === undefined || s2 === null || s2 === undefined) return false;
         if (s1 === s2) return false;
-        return Math.max(s1, s2) >= raceTo;
+        return Math.max(s1, s2) >= race;
     }
 
     // Zulaessiges Maximum eines Feldes: Hat der Gegner die Vorgabe bereits erreicht,
-    // sind hoechstens raceTo-1 Saetze moeglich. Damit ist z.B. 5:5 bei Race to 5 unmoeglich.
-    function maxFor(otherScore) {
-        return (otherScore !== null && otherScore !== undefined && otherScore >= raceTo) ? raceTo - 1 : raceTo;
+    // sind hoechstens race-1 Saetze moeglich. Damit ist z.B. 5:5 bei Race to 5 unmoeglich.
+    function maxFor(otherScore, race) {
+        return (otherScore !== null && otherScore !== undefined && otherScore >= race) ? race - 1 : race;
     }
 
     // Das zweite Score-Feld desselben Spiels
@@ -917,23 +949,25 @@
         });
     }
 
-    // Eingabe pruefen, im Store ablegen und das Gegnerfeld begrenzen
+    // Eingabe pruefen, im Store ablegen und das Gegnerfeld begrenzen.
+    // Die gueltige Zielvorgabe haengt als data-race am Feld (Phase 1 oder Phase 2).
     function clampScoreInput(input, store) {
         // Fuehrende Nullen entfernen: aus "03" wird "3", eine alleinstehende "0" bleibt
         if (/^0\d/.test(input.value)) input.value = String(parseInt(input.value, 10));
 
+        const race = parseInt(input.dataset.race) || raceGroup;
         const other = partnerInput(input);
         const oVal = other ? toScore(other.value) : null;
 
         let val = toScore(input.value);
-        const limit = maxFor(oVal);              // Gegner hat die Vorgabe schon erreicht -> hoechstens raceTo-1
+        const limit = maxFor(oVal, race);        // Gegner hat die Vorgabe schon erreicht -> hoechstens race-1
         if (val !== null && val > limit) { val = limit; input.value = limit; }
         if (val !== null && val < 0) { val = 0; input.value = 0; }
         input.max = limit;
         store[input.dataset.key] = val;
 
         if (other) {                             // Gegnerfeld sperren bzw. wieder freigeben
-            const oLimit = maxFor(val);
+            const oLimit = maxFor(val, race);
             other.max = oLimit;
             if (oVal !== null && oVal > oLimit) {
                 other.value = oLimit;
@@ -943,36 +977,37 @@
     }
 
     // Ergebnis eines Spiels an die aktuelle Vorgabe anpassen. Der bisherige Sieger
-    // behaelt die Zielvorgabe, der Verlierer wird auf raceTo-1 begrenzt.
-    function clampPair(store, k1, k2) {
+    // behaelt die Zielvorgabe, der Verlierer wird auf race-1 begrenzt.
+    function clampPair(store, k1, k2, race) {
         const o1 = store[k1], o2 = store[k2];
         if (typeof o1 !== 'number' || typeof o2 !== 'number') {
-            if (typeof o1 === 'number' && o1 > raceTo) store[k1] = raceTo;
-            if (typeof o2 === 'number' && o2 > raceTo) store[k2] = raceTo;
+            if (typeof o1 === 'number' && o1 > race) store[k1] = race;
+            if (typeof o2 === 'number' && o2 > race) store[k2] = race;
             return;
         }
-        let s1 = Math.min(o1, raceTo);
-        let s2 = Math.min(o2, raceTo);
-        if (s1 >= raceTo && s2 >= raceTo) {
-            if (o1 >= o2) s2 = raceTo - 1; else s1 = raceTo - 1;
+        let s1 = Math.min(o1, race);
+        let s2 = Math.min(o2, race);
+        if (s1 >= race && s2 >= race) {
+            if (o1 >= o2) s2 = race - 1; else s1 = race - 1;
         }
         store[k1] = s1;
         store[k2] = s2;
     }
 
-    // Alle Ergebnisse (Gruppenphase und Phase 2) an die aktuelle Vorgabe anpassen
+    // Alle Ergebnisse an die jeweilige Vorgabe anpassen:
+    // Gruppenphase mit raceGroup, Platzierungsduelle mit racePhase2.
     function normalizeAllScores() {
         ['A', 'B'].forEach(grp => {
             groupRounds[grp].forEach((round, rIdx) => {
                 round.pairs.forEach((pair, gIdx) => {
                     if (pair[1] === -1) return;
-                    clampPair(scores, gKey(grp, rIdx, gIdx, 1), gKey(grp, rIdx, gIdx, 2));
+                    clampPair(scores, gKey(grp, rIdx, gIdx, 1), gKey(grp, rIdx, gIdx, 2), raceGroup);
                 });
             });
         });
         if (phase2) {
             const duels = Math.min(phase2.A.length, phase2.B.length);
-            for (let i = 0; i < duels; i++) clampPair(finalScores, fKey(i, 1), fKey(i, 2));
+            for (let i = 0; i < duels; i++) clampPair(finalScores, fKey(i, 1), fKey(i, 2), racePhase2);
         }
     }
 
@@ -1476,7 +1511,8 @@
         box.innerHTML =
             `<b>Gruppe A (${groups.A.length}):</b> ${listA}<br>` +
             `<b>Gruppe B (${groups.B.length}):</b> ${listB}<br>` +
-            `<b>Spiele:</b> ${gamesA} + ${gamesB} in der Gruppenphase, ${duels} Platzierungsduelle` +
+            `<b>Spiele:</b> ${gamesA} + ${gamesB} in der Gruppenphase (Race to ${raceGroup}), ` +
+            `${duels} Platzierungsduelle (Race to ${racePhase2})` +
             (bye ? '. Der Letzte der Gruppe A hat in Phase 2 spielfrei und belegt den letzten Platz.' : '.');
 
         metaA.textContent = `${groups.A.length} Spieler / ${gamesA} Spiele`;
@@ -1526,9 +1562,9 @@
                         <td style="color:#7f8c8d; font-weight:bold;">${matchCounter++}</td>
                         <td class="player-name-cell" style="text-align:right;"><span data-pname="${pair[0]}">${esc(currentNames[pair[0]])}</span></td>
                         <td class="score-cell">
-                            <input type="number" min="0" max="${maxFor(scores[k2])}" class="score-input" data-store="g" data-key="${k1}" value="${scores[k1] ?? ''}"${phase1Locked ? ' disabled' : ''}>
+                            <input type="number" min="0" max="${maxFor(scores[k2], raceGroup)}" class="score-input" data-store="g" data-race="${raceGroup}" data-key="${k1}" value="${scores[k1] ?? ''}"${phase1Locked ? ' disabled' : ''}>
                             <span class="vs-text">:</span>
-                            <input type="number" min="0" max="${maxFor(scores[k1])}" class="score-input" data-store="g" data-key="${k2}" value="${scores[k2] ?? ''}"${phase1Locked ? ' disabled' : ''}>
+                            <input type="number" min="0" max="${maxFor(scores[k1], raceGroup)}" class="score-input" data-store="g" data-race="${raceGroup}" data-key="${k2}" value="${scores[k2] ?? ''}"${phase1Locked ? ' disabled' : ''}>
                         </td>
                         <td class="player-name-cell" style="text-align:left;"><span data-pname="${pair[1]}">${esc(currentNames[pair[1]])}</span></td>
                     `;
@@ -1561,7 +1597,7 @@
         scheduleAutosave();
     }
 
-    // Nach Aenderung der Zielvorgabe: Ergebnisse anpassen und alles neu aufbauen
+    // Nach Aenderung einer Zielvorgabe: Ergebnisse anpassen und alles neu aufbauen
     function applyRaceToLimit() {
         normalizeAllScores();
         renderAll();
@@ -1586,7 +1622,7 @@
                 const t = okey.split('-');
                 const s1 = scores[gKey(t[0], t[1], t[2], 1)];
                 const s2 = scores[gKey(t[0], t[1], t[2], 2)];
-                if (!isGameFinished(s1, s2)) tr.classList.add('open-highlight');
+                if (!isGameFinished(s1, s2, raceGroup)) tr.classList.add('open-highlight');
             });
             return;
         }
@@ -1813,7 +1849,7 @@
 
         if (!allPlayed) {
             box.className = 'hint-box info';
-            box.innerHTML = `Noch ${openGames} Spiel(e) nicht beendet (Race to ${raceTo} noch nicht erreicht).`;
+            box.innerHTML = `Noch ${openGames} Spiel(e) nicht beendet (Race to ${raceGroup} noch nicht erreicht).`;
             box.style.display = 'block';
             return;
         }
@@ -1891,7 +1927,7 @@
     // ---------------------------------------------------------------------
     // Phase 2
     // ---------------------------------------------------------------------
-    // Zaehlt Spiele einer Gruppe, die noch nicht beendet sind (Race-to-Vorgabe nicht erreicht)
+    // Zaehlt Spiele einer Gruppe, die noch nicht beendet sind (Race-to-Vorgabe der Gruppenphase nicht erreicht)
     function countOpenGamesInGroup(grp) {
         let open = 0;
         groupRounds[grp].forEach((round, rIdx) => {
@@ -1899,7 +1935,7 @@
                 if (pair[1] === -1) return;
                 const s1 = scores[gKey(grp, rIdx, gIdx, 1)];
                 const s2 = scores[gKey(grp, rIdx, gIdx, 2)];
-                if (!isGameFinished(s1, s2)) open++;
+                if (!isGameFinished(s1, s2, raceGroup)) open++;
             });
         });
         return open;
@@ -1917,7 +1953,7 @@
         }
         const open = countOpenGroupGames();
         if (open > 0) {
-            alert(`Phase 2 kann noch nicht starten: ${open} Gruppenspiel(e) sind nicht beendet (Race to ${raceTo} noch nicht erreicht).`);
+            alert(`Phase 2 kann noch nicht starten: ${open} Gruppenspiel(e) sind nicht beendet (Race to ${raceGroup} noch nicht erreicht).`);
             return;
         }
 
@@ -1988,7 +2024,7 @@
                     statusBox.className = 'hint-box';
                     statusBox.innerHTML =
                         '<div class="status-row">' +
-                            `<span class="status-text">Noch ${open} Gruppenspiel(e) nicht beendet (Race to ${raceTo} noch nicht erreicht). Phase 2 kann erst danach starten.</span>` +
+                            `<span class="status-text">Noch ${open} Gruppenspiel(e) nicht beendet (Race to ${raceGroup} noch nicht erreicht). Phase 2 kann erst danach starten.</span>` +
                             `<input type="checkbox" class="status-chk no-print" id="chk-mark-open" title="Noch nicht beendete Gruppenspiele im Spielplan gelb hervorheben"${markOpen ? ' checked' : ''}>` +
                         '</div>';
                     const chkOpen = document.getElementById('chk-mark-open');
@@ -1997,7 +2033,7 @@
                     // Nichts mehr offen: Ankreuzfeld entfaellt, Markierung wird geloescht
                     markOpen = false;
                     statusBox.className = 'hint-box ok';
-                    statusBox.textContent = 'Alle Gruppenspiele sind beendet. Phase 2 kann gestartet werden.';
+                    statusBox.textContent = `Alle Gruppenspiele sind beendet. Phase 2 kann gestartet werden (Race to ${racePhase2}).`;
                 }
             }
             return;
@@ -2010,7 +2046,7 @@
 
         const duels = Math.min(phase2.A.length, phase2.B.length);
         statusBox.className = 'hint-box info';
-        statusBox.innerHTML = '<b>Phase 2 läuft.</b> Die Gruppenplatzierungen sind fixiert. Änderungen in Phase 1 wirken sich nicht mehr auf die Paarungen aus.';
+        statusBox.innerHTML = `<b>Phase 2 läuft (Race to ${racePhase2}).</b> Die Gruppenplatzierungen sind fixiert. Änderungen in Phase 1 wirken sich nicht mehr auf die Paarungen aus.`;
 
         tbody.innerHTML = '';
         for (let i = 0; i < duels; i++) {
@@ -2030,9 +2066,9 @@
                     <span class="gbadge a" style="margin-left:6px;">A${i + 1}</span>
                 </td>
                 <td class="score-cell">
-                    <input type="number" min="0" max="${maxFor(finalScores[k2])}" class="score-input" data-store="f" data-key="${k1}" value="${finalScores[k1] ?? ''}">
+                    <input type="number" min="0" max="${maxFor(finalScores[k2], racePhase2)}" class="score-input" data-store="f" data-race="${racePhase2}" data-key="${k1}" value="${finalScores[k1] ?? ''}">
                     <span class="vs-text">:</span>
-                    <input type="number" min="0" max="${maxFor(finalScores[k1])}" class="score-input" data-store="f" data-key="${k2}" value="${finalScores[k2] ?? ''}">
+                    <input type="number" min="0" max="${maxFor(finalScores[k1], racePhase2)}" class="score-input" data-store="f" data-race="${racePhase2}" data-key="${k2}" value="${finalScores[k2] ?? ''}">
                 </td>
                 <td class="player-name-cell" style="text-align:left;">
                     <span class="gbadge b" style="margin-right:6px;">B${i + 1}</span>
@@ -2084,15 +2120,17 @@
             const s1 = finalScores[fKey(i, 1)];
             const s2 = finalScores[fKey(i, 2)];
             const valid = (s1 !== null && s1 !== undefined && s2 !== null && s2 !== undefined);
-            const decided = isGameFinished(s1, s2);   // erst mit Erreichen der Race-to-Vorgabe entschieden
+            const decided = isGameFinished(s1, s2, racePhase2);   // erst mit Erreichen der Race-to-Vorgabe entschieden
 
             let winner, loser, wScore, lScore;
             if (decided && s1 > s2) { winner = a; loser = b; wScore = s1; lScore = s2; }
             else if (decided && s2 > s1) { winner = b; loser = a; wScore = s2; lScore = s1; }
             else { winner = a; loser = b; wScore = valid ? s1 : 0; lScore = valid ? s2 : 0; }
 
+            // Das Duell-Ergebnis steht nur in der Zeile des Siegers; die Zeile des
+            // Verlierers bleibt in dieser Spalte leer (result: '').
             rows.push({ idx: winner, place: 2 * i + 1, groupPlace: i + 1, result: `${wScore} : ${lScore}`, open: !decided, bye: false });
-            rows.push({ idx: loser, place: 2 * i + 2, groupPlace: i + 1, result: `${lScore} : ${wScore}`, open: !decided, bye: false });
+            rows.push({ idx: loser, place: 2 * i + 2, groupPlace: i + 1, result: '', open: !decided, bye: false });
         }
 
         // Überzähliger Spieler hängt hinten an
@@ -2128,7 +2166,7 @@
 
         note.className = openCount > 0 ? 'hint-box' : 'hint-box ok';
         note.innerHTML = openCount > 0
-            ? `<b>Vorläufig:</b> ${openCount} Duell(e) nicht beendet (Race to ${raceTo} noch nicht erreicht). Bei offenen Duellen steht der Spieler aus Gruppe A vorläufig oben.`
+            ? `<b>Vorläufig:</b> ${openCount} Duell(e) nicht beendet (Race to ${racePhase2} noch nicht erreicht). Bei offenen Duellen steht der Spieler aus Gruppe A vorläufig oben.`
             : '<b>Endstand.</b> Alle Platzierungsduelle sind entschieden.';
 
         tbody.innerHTML = rows.map(r => {
@@ -2156,7 +2194,11 @@
             savedAt: new Date().toISOString(),
             playerCount: playerCount,
             gameType: document.getElementById('game-type').value,
-            raceTo: raceTo,
+            // Beide Vorgaben getrennt. raceTo bleibt zusaetzlich erhalten, damit
+            // aeltere Programmstaende diese Datei weiterhin laden koennen.
+            raceGroup: raceGroup,
+            racePhase2: racePhase2,
+            raceTo: raceGroup,
             currentNames: currentNames.slice(),
             groups: { A: groups.A.slice(), B: groups.B.slice() },
             scores: Object.assign({}, scores),
@@ -2177,7 +2219,12 @@
         currentNames = Array.isArray(snap.currentNames) && snap.currentNames.length === playerCount
             ? snap.currentNames.slice()
             : DEFAULT_NAMES.slice(0, playerCount);
-        raceTo = parseInt(snap.raceTo) || 5;
+
+        // Aeltere Staende kennen nur ein gemeinsames "raceTo". Dieser Wert gilt
+        // dann fuer beide Phasen.
+        const altRace = parseInt(snap.raceTo) || 3;
+        raceGroup  = parseInt(snap.raceGroup)  || altRace;
+        racePhase2 = parseInt(snap.racePhase2) || altRace;
 
         const gA = snap.groups && Array.isArray(snap.groups.A) ? snap.groups.A.slice() : [];
         const gB = snap.groups && Array.isArray(snap.groups.B) ? snap.groups.B.slice() : [];
@@ -2208,13 +2255,14 @@
         markOpen = false;
 
         document.getElementById('player-count').value = String(playerCount);
-        document.getElementById('race-to').value = String(raceTo);
+        document.getElementById('race-to').value = String(raceGroup);
+        document.getElementById('race-phase2').value = String(racePhase2);
         if (snap.gameType) {
             document.getElementById('game-type').value = snap.gameType;
             document.getElementById('game-type-display').innerText = `(${snap.gameType})`;
         }
 
-        // Geladene Ergebnisse an die Zielvorgabe anpassen (aeltere Staende koennen 5:5 enthalten)
+        // Geladene Ergebnisse an die Zielvorgaben anpassen (aeltere Staende koennen 5:5 enthalten)
         normalizeAllScores();
 
         renderPlayerInputs();
@@ -2348,14 +2396,15 @@
 
     function buildPrintReport() {
         const gameType = document.getElementById('game-type').value;
-        const race = document.getElementById('race-to').value;
+        // Beide Race-to-Vorgaben getrennt ausweisen
+        const raceInfo = `Race to ${raceGroup} (Gruppenphase) / ${racePhase2} (Phase 2)`;
         const ende = new Date();
         const date = formatDateDE(ende);
         const zeitraum = buildTimeRange(ende);
         const title = getTournamentName() || 'Turnierergebnis';
 
         let html = `<h1>${esc(title)}</h1>
-            <p class="sub">Zwei-Gruppen-Modus &middot; ${esc(gameType)} &middot; Race to ${esc(race)} &middot; ${playerCount} Teilnehmer &middot; ${date}${zeitraum}</p>`;
+            <p class="sub">Zwei-Gruppen-Modus &middot; ${esc(gameType)} &middot; ${raceInfo} &middot; ${playerCount} Teilnehmer &middot; ${date}${zeitraum}</p>`;
 
         if (groups.A.length === 0) {
             html += '<p>Es wurde noch keine Auslosung durchgeführt.</p>';
@@ -2376,11 +2425,11 @@
                         <td style="text-align:left;">${esc(currentNames[r.idx])}</td>
                         <td>${groupOf(r.idx) || '-'}</td>
                         <td>${r.groupPlace}</td>
-                        <td>${esc(r.result)}${r.open ? ' (offen)' : ''}</td>
+                        <td>${r.result ? esc(r.result) + (r.open ? ' (offen)' : '') : ''}</td>
                     </tr>`).join('') +
                 `</tbody></table>`;
 
-            html += `<h2 class="seite-neu">Phase 2 - Platzierungsduelle</h2>
+            html += `<h2 class="seite-neu">Phase 2 - Platzierungsduelle (Race to ${racePhase2})</h2>
                 <table class="table-style"><tbody>`;
             const duels = Math.min(phase2.A.length, phase2.B.length);
             for (let i = 0; i < duels; i++) {
